@@ -79,7 +79,7 @@ function handleMessage(sender_psid, received_message) {
   let response,response_one,response_two;
 
   // Check if the message contains text
-  if (received_message.text) 
+  if (received_message.text && received_message.quick_reply.payload==undefined) 
     {    
 
     // Create the payload for a basic text message
@@ -93,12 +93,12 @@ function handleMessage(sender_psid, received_message) {
         {
           "content_type":"text",
           "title":"Yes",
-          "payload":"<POSTBACK_PAYLOAD>",
+          "payload":"yes_for_sign_in",
           "image_url":"http://example.com/img/green.png"
         },{
           "content_type":"text",
           "title":"No",
-          "payload":"<POSTBACK_PAYLOAD>",
+          "payload":"no_for_sign_in",
           "image_url":"http://example.com/img/red.png"
         }
       ]
