@@ -8,6 +8,8 @@ const
   request=require('request');
   const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
   console.log(PAGE_ACCESS_TOKEN);
+var response=require('./response/response'),
+    fs=require('fs');
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 // Creates the endpoint for our webhook 
@@ -74,64 +76,46 @@ app.get('/webhook', (req, res) => {
     }
   });
 
+function verifUser(id)
+  {
+  try{
+  var users_array=[];
+  users_array=JSON.parse(fs.readFileSync('Users.txt'));
+  if(id in users_array)
+    {
+      return 1;
+    }
+  return 0;
+  }
+  catch(e)
+    {
+    return 0;
+    }
+  }
   // Handles messages events
 function handleMessage(sender_psid, received_message) {
   let response,response_one,response_two;
-
+  var already_user=verifyUser(sender_psid);
   // Check if the message contains text
-  if (received_message.text && received_message.quick_reply.payload!="yes_for_sign_in") 
+  if(received_message.text && received_message.quick_reply!=undefined &&already_user==1)
+    {
+    response={
+      "text":"Hello Welcome Back"
+    }
+    }
+  else if (received_message.text && received_message.quick_reply!=undefined) 
     {    
-
-    // Create the payload for a basic text message
-    response_one = {
-      "text": `Helloo,this is ALephNULL ,we can help you stay motivated `
-    }
-    // console.log(response);
-    response_two={
-      "text": "Would you like to try ?",
-      "quick_replies":[
-        {
-          "content_type":"text",
-          "title":"Yes",
-          "payload":"yes_for_sign_in",
-          "image_url":"http://example.com/img/green.png"
-        },{
-          "content_type":"text",
-          "title":"No",
-          "payload":"no_for_sign_in",
-          "image_url":"http://example.com/img/red.png"
-        }
-      ]
-    }
+    let local_response=response.initialMessages();
     }  
-    else if (received_message.attachments) {
+  else if(received_message.quick_repy && received_message.text)
+      {
+      response=response.sign_up();
+      fs.appendFileSync('Users.txt',JSON.stringify(sender_psid));
+      }
+  else if (received_message.attachments) {
       // Get the URL of the message attachment
       let attachment_url = received_message.attachments[0].payload.url;
-      response = {
-        "attachment": {
-          "type": "template",
-          "payload": {
-            "template_type": "generic",
-            "elements": [{
-              "title": "Is this the right picture?",
-              "subtitle": "Tap a button to answer.",
-              "image_url": attachment_url,
-              "buttons": [
-                {
-                  "type": "postback",
-                  "title": "Yes!",
-                  "payload": "yes",
-                },
-                {
-                  "type": "postback",
-                  "title": "No!",
-                  "payload": "no",
-                }
-              ],
-            }]
-          }
-        }
-       } 
+      response =response.response_attachment(); 
     } 
       
 
