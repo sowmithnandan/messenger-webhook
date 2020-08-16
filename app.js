@@ -79,7 +79,7 @@ function handleMessage(sender_psid, received_message) {
   let response,response_one,response_two;
 
   // Check if the message contains text
-  if (received_message.text && received_message.quick_reply.payload==undefined) 
+  if (received_message.text && received_message.quick_reply.payload!="yes_for_sign_in") 
     {    
 
     // Create the payload for a basic text message
