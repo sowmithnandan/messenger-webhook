@@ -76,7 +76,7 @@ app.get('/webhook', (req, res) => {
 
   // Handles messages events
 function handleMessage(sender_psid, received_message) {
-  let response;
+  let response,response_one,response_two;
 
   // Check if the message contains text
   if (received_message.text) 
@@ -137,7 +137,7 @@ function handleMessage(sender_psid, received_message) {
 
   // Sends the response message
   callSendAPI(sender_psid, response);
-  if(response_one && response_two)
+  if(response_one!=undefined && response_two!=undefined)
     {
       callSendAPI(sender_psid, response_one);
       callSendAPI(sender_psid, response_two);
@@ -188,3 +188,4 @@ function callSendAPI(sender_psid, response) {
     }
   }); 
 }
+
