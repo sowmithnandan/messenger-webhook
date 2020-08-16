@@ -83,10 +83,26 @@ function handleMessage(sender_psid, received_message) {
     {    
 
     // Create the payload for a basic text message
-    response = {
-      "text": `You sent the message: "${received_message.text}". Now send me an image!`
+    response_one = {
+      "text": `Helloo,this is ALephNULL ,we can help you stay motivated `
     }
-    console.log(response);
+    // console.log(response);
+    response_two={
+      "text": "Would you like to try ?",
+      "quick_replies":[
+        {
+          "content_type":"text",
+          "title":"Yes",
+          "payload":"<POSTBACK_PAYLOAD>",
+          "image_url":"http://example.com/img/green.png"
+        },{
+          "content_type":"text",
+          "title":"No",
+          "payload":"<POSTBACK_PAYLOAD>",
+          "image_url":"http://example.com/img/red.png"
+        }
+      ]
+    }
     }  
     else if (received_message.attachments) {
       // Get the URL of the message attachment
@@ -121,6 +137,11 @@ function handleMessage(sender_psid, received_message) {
 
   // Sends the response message
   callSendAPI(sender_psid, response);
+  if(response_one && response_two)
+    {
+      callSendAPI(sender_psid, response_one);
+      callSendAPI(sender_psid, response_two);
+    }
 
 }
 
